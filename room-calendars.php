@@ -46,9 +46,9 @@ class Room_Calendars {
             foreach($input['name'] as $i=>$name) {
                 $name = sanitize_text_field($name);
                 $url = esc_url_raw($input['url'][$i] ?? '');
-                $color = $input['color'][$i] != '' ? $input['color'][$i] : sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+                $color = $input['color'][$i] != null && $input['color'][$i] != '' ? $input['color'][$i] : sprintf('#%06X', mt_rand(0, 0xFFFFFF));
 
-                if($name && $url) $clean[]=['name'=>$name,'url'=>$url];
+                if($name && $url) $clean[]=['name'=>$name,'url'=>$url, 'color'=>$color];
             }
         }
         return $clean;
@@ -62,11 +62,11 @@ class Room_Calendars {
 
     public function field_calendars_callback() {
         $data = get_option('room_calendars_data',[]);
-        echo '<table id="rc-calendar-table" class="widefat"><thead><tr><th>Name</th><th>ICS URL</th><th></th></tr></thead><tbody>';
+        echo '<table id="rc-calendar-table" class="widefat"><thead><tr><th>Name</th><th>ICS URL</th><th>Color</th><th></th></tr></thead><tbody>';
         foreach($data as $row){
-            echo '<tr><td><input name="room_calendars_data[name][]" value="'.esc_attr($row['name']).'" /></td>';
-            echo '<td><input name="room_calendars_data[url][]" value="'.esc_attr($row['url']).'" style="width:100%;" /></td>';
-            echo '<td><input name="room_calendars_data[color][]" value="'.esc_attr($row['color']).'" /></td>';
+            echo '<tr><td><input name="room_calendars_data[name][]" value="'.esc_attr($row['name'] ?? '').'" /></td>';
+            echo '<td><input name="room_calendars_data[url][]" value="'.esc_attr($row['url'] ?? '').'" style="width:100%;" /></td>';
+            echo '<td><input name="room_calendars_data[color][]" value="'.esc_attr($row['color'] ?? '').'" /></td>';
             echo '<td><button class="rc-remove-row button">-</button></td></tr>';
         }
         echo '</tbody></table>';
@@ -105,11 +105,11 @@ class Room_Calendars {
         wp_register_script( 'rc-calendars',
             plugins_url( 'assets/js/calendars.js', __FILE__ ),
             [ 'ical-js','fullcalendar','fullcalendar-locale-pl' ],
-            '1.1.20', true
+            '1.1.21', true
         );
         wp_register_style( 'rc-style',
             plugins_url( 'assets/css/style.css', __FILE__ ),
-            [], '1.1.20'
+            [], '1.1.21'
         );
     }
 
