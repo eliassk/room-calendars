@@ -2,8 +2,8 @@
 /*
 Plugin Name: Room Calendars
 Description: Room Calendars – Multi-ICS Viewer with list view filters. Admin under Settings.
-Version: 1.1.19
-Author: KOACH
+Version: 1.2.0
+Author: Sebastian Kedzior
 Text Domain: room-calendars
 */
 if (!defined('ABSPATH')) exit;
@@ -14,7 +14,7 @@ class Room_Calendars {
         add_action('admin_menu',[ $this,'register_admin_page' ]);
         add_action('admin_init',[ $this,'register_settings' ]);
         add_action('admin_enqueue_scripts',[ $this,'enqueue_admin_assets' ]);
-        add_action('wp_enqueue_scripts',[ $this,'enqueue_assets' ]);
+        add_action('wp_enqueue_scripts',[ $this,'register_assets' ]);
         add_shortcode('room_calendars',[ $this,'render_shortcode' ]);
         add_action('wp_ajax_nopriv_rc_fetch_ics',[ $this,'ajax_fetch_ics' ]);
         add_action('wp_ajax_rc_fetch_ics',[ $this,'ajax_fetch_ics' ]);
@@ -82,17 +82,47 @@ class Room_Calendars {
         <?php
     }
 
-    public function enqueue_assets() {
-        wp_enqueue_script('ical-js','https://cdnjs.cloudflare.com/ajax/libs/ical.js/1.4.0/ical.min.js',[], '1.4.0',true);
-        wp_enqueue_script('fullcalendar','https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js',[], '5.11.0',true);
-        wp_enqueue_script('fullcalendar-locale-pl','https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales/pl.js',['fullcalendar'],'5.11.0',true);
-        wp_enqueue_script('rc-calendars',plugins_url('assets/js/calendars.js',__FILE__),['ical-js','fullcalendar','fullcalendar-locale-pl'],'1.1.19',true);
-        wp_localize_script('rc-calendars','rc_params',['ajax_url'=>admin_url('admin-ajax.php')]);
-        wp_enqueue_style('fullcalendar-css','https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css');
-        wp_enqueue_style('rc-style',plugins_url('assets/css/style.css',__FILE__));
+    public function register_assets() {
+        wp_register_script( 'ical-js',
+            'https://cdnjs.cloudflare.com/ajax/libs/ical.js/1.4.0/ical.min.js',
+            [], '1.4.0', true
+        );
+        wp_register_script( 'fullcalendar',
+            'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js',
+            [], '5.11.0', true
+        );
+        wp_register_script( 'fullcalendar-locale-pl',
+            'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales/pl.js',
+            [ 'fullcalendar' ], '5.11.0', true
+        );
+        wp_register_style( 'fullcalendar-css',
+            'https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css',
+            [], '5.11.0'
+        );
+
+        wp_register_script( 'rc-calendars',
+            plugins_url( 'assets/js/calendars.js', __FILE__ ),
+            [ 'ical-js','fullcalendar','fullcalendar-locale-pl' ],
+            '1.1.20', true
+        );
+        wp_register_style( 'rc-style',
+            plugins_url( 'assets/css/style.css', __FILE__ ),
+            [], '1.1.20'
+        );
     }
 
     public function render_shortcode($atts){
+        wp_enqueue_script( 'ical-js' );
+        wp_enqueue_script( 'fullcalendar' );
+        wp_enqueue_script( 'fullcalendar-locale-pl' );
+        wp_enqueue_script( 'rc-calendars' );
+        wp_enqueue_style( 'fullcalendar-css' );
+
+        wp_localize_script( 'rc-calendars', 'rc_params', [
+            'ajax_url' => admin_url( 'admin-ajax.php' )
+        ]);
+        wp_enqueue_style( 'rc-style' );
+
         $rooms = get_option('room_calendars_data',[]);
         $json = wp_json_encode($rooms);
         ob_start();?>
