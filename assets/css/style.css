@@ -1,0 +1,13 @@
+.rc-options {
+    margin-bottom: 0.7em; margin-bottom: 2em; }
+.rc-option {
+    margin-bottom: 0.7em; cursor: pointer; display: inline-flex; align-items: center; margin-right: 1em; padding: 0.3em 0.6em; border-radius: 4px; background: #f9f9f9; transition: opacity 0.2s; opacity: 0.5; }
+.rc-option.active {
+    margin-bottom: 0.7em; opacity: 1; background: #e0e0e0; }
+.rc-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+#rc-calendar-container { clear: both; }
+/* Admin table styling */
+#rc-calendar-table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
+#rc-calendar-table th, #rc-calendar-table td { border: 1px solid #ddd; padding: 8px; }
+#rc-calendar-table input[type="text"], #rc-calendar-table input[type="url"] { width: 100%; box-sizing: border-box; }
+#rc-add-row, .rc-remove-row { margin-top: 4px; }
