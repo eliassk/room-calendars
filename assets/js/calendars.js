@@ -13,7 +13,7 @@
     rooms.forEach(room => {
       const key = room.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
       eventsByRoom[key] = [];
-      colorMap[key] = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+      colorMap[key] = room.color;
       const opt = container.querySelector(`.rc-option[data-room="${key}"]`);
       if(opt && !opt.querySelector('.rc-dot')) {
         const dot = document.createElement('span');

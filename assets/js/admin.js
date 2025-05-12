@@ -4,6 +4,7 @@ jQuery(function($){
         $('#rc-calendar-table tbody').append(
             '<tr><td><input name="room_calendars_data[name][]" /></td>'
             +'<td><input name="room_calendars_data[url][]" style="width:100%;" /></td>'
+            +'<td><input name="room_calendars_data[color][]" /></td>'
             +'<td><button class="rc-remove-row button">-</button></td></tr>'
         );
     });

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Room Calendars
 Description: Room Calendars – Multi-ICS Viewer with list view filters. Admin under Settings.
-Version: 1.2.0
+Version: 1.2.1
 Author: Sebastian Kedzior
 Text Domain: room-calendars
 */
@@ -44,9 +44,10 @@ class Room_Calendars {
         $clean=[];
         if(isset($input['name']) && is_array($input['name'])) {
             foreach($input['name'] as $i=>$name) {
-                $url = $input['url'][$i] ?? '';
                 $name = sanitize_text_field($name);
-                $url = esc_url_raw($url);
+                $url = esc_url_raw($input['url'][$i] ?? '');
+                $color = $input['color'][$i] != '' ? $input['color'][$i] : sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+
                 if($name && $url) $clean[]=['name'=>$name,'url'=>$url];
             }
         }
@@ -65,6 +66,7 @@ class Room_Calendars {
         foreach($data as $row){
             echo '<tr><td><input name="room_calendars_data[name][]" value="'.esc_attr($row['name']).'" /></td>';
             echo '<td><input name="room_calendars_data[url][]" value="'.esc_attr($row['url']).'" style="width:100%;" /></td>';
+            echo '<td><input name="room_calendars_data[color][]" value="'.esc_attr($row['color']).'" /></td>';
             echo '<td><button class="rc-remove-row button">-</button></td></tr>';
         }
         echo '</tbody></table>';
